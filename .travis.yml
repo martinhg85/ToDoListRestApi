@@ -1,0 +1,30 @@
+language: php
+php:
+  - 5.5
+  - 5.6
+  - 7.0
+  - hhvm
+services:
+  - mysql
+# .travis.yml
+before_script:
+  - mysql -e 'create database dbtest;'
+  - cp .env.example .env
+  - php artisan key:generate
+  - php artisan migrate --seed
+  - php artisan clear-compiled
+
+before_install:
+  - composer self-update
+
+install:
+  - composer install --no-interaction --prefer-source
+
+matrix:
+  allow_failures:
+    - php: hhvm
+    - php: 7.0
+
+addons:
+    code_climate:
+        repo_token: 132909497dc319666376e1c9a7a94967f78cbd1a7006c23b53331940cf3ee252
